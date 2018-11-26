@@ -54,6 +54,8 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
+  
+  previous_timestamp_ = 0;
 }
 
 UKF::~UKF() {}
@@ -69,6 +71,50 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
+  
+  //as suggested by Q+A video use EKF initialisation
+  /*****************************************************************************
+   *  Initialization
+   ****************************************************************************/
+  if (!is_initialized_) {
+   
+    cout << "Initialising UKF: " << endl;
+          
+    if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+     
+      float rho = meas_package.raw_measurements_(0) ;
+      float theta = meas_package.raw_measurements_(1) ;//theta is called phi_measured in lesson 6
+      
+      x_(0) = rho*cos(theta);
+      x_(1) = rho*sin(theta);  
+           
+    }
+    else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+      /**
+      Initialize state.
+      */
+         
+      x_(0) = meas_package.raw_measurements_(0) ; 
+      x_(1) = meas_package.raw_measurements_(1) ;
+      
+    }
+   // // initial covariance matrix
+    P_ << 1, 0, 0, 0, 0,//might change this I am maully putting in identity matirx for now
+		  0, 1, 0, 0, 0,
+		  0, 0, 1, 0, 0,
+		  0, 0, 0, 1, 0,
+    	  0, 0, 0, 0, 1;
+    previous_timestamp_ = meas_package.timestamp_;
+
+    // done initializing, no need to predict or update
+    is_initialized_ = true;
+  
+    return;
+  }
+  
+  
+  
+  
 }
 
 /**

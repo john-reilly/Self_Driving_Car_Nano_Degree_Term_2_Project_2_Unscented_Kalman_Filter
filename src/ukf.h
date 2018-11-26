@@ -68,6 +68,7 @@ public:
   double lambda_;
 
 
+
   /**
    * Constructor
    */
@@ -102,6 +103,11 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+  
+ private:
+  
+  // previous timestamp
+  long long previous_timestamp_;// from EKF
 };
 
 #endif /* UKF_H */
