@@ -150,6 +150,9 @@ void UKF::Prediction(double delta_t) {
   //create augmented state covariance
   MatrixXd P_aug = MatrixXd(7, 7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
+  //Process noise standard deviation longitudinal acceleration in m/s^2
+  double std_a = 0.2; //also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  
   //create augmented mean state
   x_aug.head(5) = x_; //this was x not x_in quiz
   x_aug(5) = 0;
@@ -157,7 +160,7 @@ void UKF::Prediction(double delta_t) {
 
   //create augmented covariance matrix
   P_aug.fill(0.0);
-  P_aug.topLeftCorner(5,5) = P_; //was P in quiz
+  P_aug.topLeftCorner(5,5) = P_; //was P not P_ in quiz
   P_aug(5,5) = std_a*std_a;
   P_aug(6,6) = std_yawdd*std_yawdd;
 
