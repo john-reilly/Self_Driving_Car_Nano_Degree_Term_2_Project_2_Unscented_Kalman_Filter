@@ -90,28 +90,36 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
            
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
-      /**
-      Initialize state.
-      */
-         
+     //Initialize state.       
       x_(0) = meas_package.raw_measurements_(0) ; 
       x_(1) = meas_package.raw_measurements_(1) ;
       
     }
-   // // initial covariance matrix
-    P_ << 1, 0, 0, 0, 0,//might change this I am maully putting in identity matirx for now
+    // initial covariance matrix
+    P_ << 1, 0, 0, 0, 0,//might change this I am manually putting in identity matirx for now
 		  0, 1, 0, 0, 0,
 		  0, 0, 1, 0, 0,
 		  0, 0, 0, 1, 0,
     	  0, 0, 0, 0, 1;
+    
     previous_timestamp_ = meas_package.timestamp_;
 
-    // done initializing, no need to predict or update
+    // done initializing
     is_initialized_ = true;
   
     return;
   }
-  
+  // SIMILAR TO EKF as per Q+A video
+  delta_t = (meas_package.timestamp_ - previous_timestamp_)/1000000.0;
+  Prediction(delta_t);
+
+  if (meas_package.sensor_type_ == MeasurementPackage::LASER){
+    UpdateLidar(meas_package);
+  }
+  else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
+    UpdateRadar(meas_package);
+  }
+  previous_timestamp_ = meas_package.timestamp_;
   
   
   
