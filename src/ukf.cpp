@@ -148,7 +148,7 @@ void UKF::Prediction(double delta_t) {
   VectorXd x_aug = VectorXd(7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begin
   
   //create augmented mean state
-  x_aug.head(5) = x;
+  x_aug.head(5) = x_; //this was x not x_in quiz
   x_aug(5) = 0;
   x_aug(6) = 0;
 
