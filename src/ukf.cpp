@@ -145,7 +145,10 @@ void UKF::Prediction(double delta_t) {
  * Student part begin, Lesson 7 Section 18 Assignment 2
  ******************************************************************************/
   //create augmented mean vector 
-  VectorXd x_aug = VectorXd(7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begin
+  VectorXd x_aug = VectorXd(7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  
+  //create augmented state covariance
+  MatrixXd P_aug = MatrixXd(7, 7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
   //create augmented mean state
   x_aug.head(5) = x_; //this was x not x_in quiz
