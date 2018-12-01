@@ -194,7 +194,9 @@ void UKF::Prediction(double delta_t) {
   /*******************************************************************************
  * Student part begin //Lesson: 7 Section:21 Assignment 2
  ******************************************************************************/
-
+  //set state dimension
+  int n_x = 5; // from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
+  
   //create matrix with predicted sigma points as columns
   MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);// from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
   
