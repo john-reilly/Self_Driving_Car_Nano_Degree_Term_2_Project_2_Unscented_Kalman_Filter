@@ -252,7 +252,9 @@ void UKF::Prediction(double delta_t) {
   /*******************************************************************************
  * Student part begin  //Lesson: 7 Section: 24 Assignment: 2
  ******************************************************************************/
-
+  //create vector for weights
+  VectorXd weights = VectorXd(2*n_aug+1); //Lesson: 7 Section: 24 Assignment: 2 before student part
+  
   // set weights
   double weight_0 = lambda/(lambda+n_aug);
   weights(0) = weight_0;
