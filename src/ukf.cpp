@@ -258,7 +258,10 @@ void UKF::Prediction(double delta_t) {
   VectorXd weights = VectorXd(2*n_aug+1); //Lesson: 7 Section: 24 Assignment: 2 before student part
   
   //create vector for predicted state
-  VectorXd x = VectorXd(n_x);
+  VectorXd x = VectorXd(n_x);//Lesson: 7 Section: 24 Assignment: 2 before student part
+  
+  //create covariance matrix for prediction
+  MatrixXd P = MatrixXd(n_x, n_x);//Lesson: 7 Section: 24 Assignment: 2 before student part
   
   // set weights
   double weight_0 = lambda/(lambda+n_aug);
