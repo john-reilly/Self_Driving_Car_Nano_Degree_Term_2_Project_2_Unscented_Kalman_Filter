@@ -417,7 +417,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     VectorXd z_diff = Zsig.col(i) - z_pred;
 
     //angle normalization
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;// just normalise once somewhere else in a function....
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
     S = S + weights(i) * z_diff * z_diff.transpose();
@@ -437,6 +437,30 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   // This is Lesson 7 Video 30 Assignemnt 2 as per Q+A
   //UPDATE RADAR
   
+  //create example vector for predicted state mean
+  VectorXd x = VectorXd(n_x);
+  x <<
+     5.93637,
+     1.49035,
+     2.20528,
+    0.536853,
+    0.353577; //not needed ??
+  
+    //create example vector for incoming radar measurement
+  VectorXd z = VectorXd(n_z);
+  z <<
+      5.9214,
+      0.2187,
+      2.0062; //not needed ??
+  
+    //create example matrix for predicted state covariance
+  MatrixXd P = MatrixXd(n_x,n_x);
+  P <<
+  0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
+  -0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
+  0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
+ -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
+ -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
 
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
