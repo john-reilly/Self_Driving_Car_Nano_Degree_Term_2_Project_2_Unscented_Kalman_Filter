@@ -155,6 +155,11 @@ void UKF::Prediction(double delta_t) {
   
   //Process noise standard deviation yaw acceleration in rad/s^2
   double std_yawdd = 0.2;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  //set augmented dimension
+  int n_aug = 7;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  
+  //create sigma point matrix
+  MatrixXd Xsig_aug = MatrixXd(n_aug, 2 * n_aug + 1);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
   //create augmented mean state
   x_aug.head(5) = x_; //this was x not x_in quiz
