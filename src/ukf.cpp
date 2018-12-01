@@ -436,10 +436,15 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
  ******************************************************************************/
   // This is Lesson 7 Video 30 Assignemnt 2 as per Q+A
   //UPDATE RADAR
+  
+
+  //create matrix for cross correlation Tc
+  MatrixXd Tc = MatrixXd(n_x, n_z);
+  
   /*******************************************************************************
  * Student part begin
  ******************************************************************************/
-
+  
   //calculate cross correlation matrix
   Tc.fill(0.0);
   for (int i = 0; i < 2 * n_aug + 1; i++) {  //2n+1 simga points
