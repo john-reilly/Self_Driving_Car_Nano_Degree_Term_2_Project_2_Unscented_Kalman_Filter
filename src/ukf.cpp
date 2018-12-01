@@ -153,6 +153,9 @@ void UKF::Prediction(double delta_t) {
   //Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a = 0.2; //also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
+  //Process noise standard deviation yaw acceleration in rad/s^2
+  double std_yawdd = 0.2;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  
   //create augmented mean state
   x_aug.head(5) = x_; //this was x not x_in quiz
   x_aug(5) = 0;
