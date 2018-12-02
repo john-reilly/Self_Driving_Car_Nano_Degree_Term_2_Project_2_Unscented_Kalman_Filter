@@ -434,7 +434,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
      2.20528,
     0.536853,
     0.353577; //not needed ??
-  
+  //PRIME SUSPECT ...am I setting z each time below?? same in LIDAR??
     //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
   z <<
@@ -627,7 +627,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   z <<
       5.9214,
       0.2187,
-      2.0062; //not needed ??
+      2.0062; //not needed ?? //PRIME SUSPECT am I overwritng each time?? I think the quiz was for one case and that is the problem??
   
     //create example matrix for predicted state covariance
   MatrixXd P = MatrixXd(n_x,n_x);
