@@ -316,22 +316,22 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the lidar NIS.
   */
-  // I am beginning by takin g the update radar code and editing from there
+  // I am beginning by taking the update radar code and editing from there
     // Below code from Lesson: 7 Video : 27 Assignment 2:
   
   //set state dimension
-  int n_x = 5;
+  int n_x = 5; //stays the same I think?
 
   //set augmented dimension
   int n_aug = 7;
 
-  //set measurement dimension, radar can measure r, phi, and r_dot
-  int n_z = 3;
+  //changes for Lidar 2 as in x and y //set measurement dimension, radar can measure r, phi, and r_dot
+  int n_z = 2;// was int n_z = 3;
 
   //define spreading parameter
-  double lambda = 3 - n_aug;
+  double lambda = 3 - n_aug;//same as radar?
 
-  //set vector for weights
+  //set vector for weights //same as radar?
   VectorXd weights = VectorXd(2*n_aug+1);
    double weight_0 = lambda/(lambda+n_aug);
   weights(0) = weight_0;
@@ -340,6 +340,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     weights(i) = weight;
   }
 
+  // I note the next 3 variables had std_laser evivalents at top of file....
   //radar measurement noise standard deviation radius in m
   double std_radr = 0.3;
 
@@ -348,7 +349,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
   //radar measurement noise standard deviation radius change in m/s
   double std_radrd = 0.1;
-
+  // filling Xsig_pred also seems suspect.....
   //create example matrix with predicted sigma points
   MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   Xsig_pred <<    
@@ -357,7 +358,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
           2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
          0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
           0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
-
+  // I think this is OK to stay same...
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
 
@@ -374,13 +375,13 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     double v  = Xsig_pred(2,i);
     double yaw = Xsig_pred(3,i);
 
-    double v1 = cos(yaw)*v;
-    double v2 = sin(yaw)*v;
+    double v1 = cos(yaw)*v;// not sure for lidar //unused warning
+    double v2 = sin(yaw)*v;// not sure for lidar //unused warning
 
-    // measurement model
-    Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //r
-    Zsig(1,i) = atan2(p_y,p_x);                                 //phi
-    Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+    //definately changes for lidar// measurement model 
+    Zsig(0,i) = p_x ; // was Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //r
+    Zsig(1,i) = p_y ; // was Zsig(1,i) = atan2(p_y,p_x);                                 //phi
+    //Zsig(2,i) = (p_x*v1 + p_y*v2 ) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
   }
 
   //mean predicted measurement
@@ -397,18 +398,22 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
 
-    //angle normalization
+    //this might need to change? //angle normalization
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;// just normalise once somewhere else in a function....
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
     S = S + weights(i) * z_diff * z_diff.transpose();
   }
-
+  //change radar to laser here
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
-  R <<    std_radr*std_radr, 0, 0,
-          0, std_radphi*std_radphi, 0,
-          0, 0,std_radrd*std_radrd;
+  //R <<    std_radr*std_radr, 0, 0,
+  //        0, std_radphi*std_radphi, 0,
+  //        0, 0,std_radrd*std_radrd;
+  
+  R <<    std_laspx_*std_laspx_, 0,
+          0, std_laspy_*std_laspy_;
+          
   S = S + R;
 
   
@@ -416,8 +421,11 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
  * Student part end
  ******************************************************************************/
   // This is Lesson 7 Video 30 Assignemnt 2 as per Q+A
-  //UPDATE RADAR
+ //now update lidar  //UPDATE RADAR
   
+  //maybe don't need this for lidar
+  //tohers leave this out eniterly until next section
+  // NOTE x and p below are same as x_ and P_ above in class variables and should be used instead??
   //create example vector for predicted state mean
   VectorXd x = VectorXd(n_x);
   x <<
@@ -478,10 +486,10 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   //angle normalization
   while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
   while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
-
+//NEED x_ and P_ here??
   //update state mean and covariance matrix
-  x = x + K * z_diff;
-  P = P - K*S*K.transpose();
+ x_ = x_ + K * z_diff;// was x = x + K * z_diff;
+ P_ = P_ - K*S*K.transpose();//was  P = P - K*S*K.transpose();
   
   
   
@@ -667,8 +675,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
   //update state mean and covariance matrix
-  x = x + K * z_diff;
-  P = P - K*S*K.transpose();
+  x_ = x_ + K * z_diff;//was x = x + K * z_diff; // NEED to USE X_ and P_ here??
+  P_ = P_ - K*S*K.transpose();//was P = P - K*S*K.transpose();
   
   
   
