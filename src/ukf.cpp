@@ -427,7 +427,10 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   //tohers leave this out eniterly until next section
   // NOTE x and p below are same as x_ and P_ above in class variables and should be used instead??
   //create example vector for predicted state mean
+  // Don't need these initalisations ans x replaces x_ not needed and P replacing P_
+  
   VectorXd x = VectorXd(n_x);
+  /*
   x <<
      5.93637,
      1.49035,
@@ -436,21 +439,25 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     0.353577; //not needed ??
   //PRIME SUSPECT ...am I setting z each time below?? same in LIDAR??
     //create example vector for incoming radar measurement
+    */
   VectorXd z = VectorXd(n_z);
+  /*
   z <<
       5.9214,
       0.2187,
       2.0062; //not needed ??
+      */
   
     //create example matrix for predicted state covariance
   MatrixXd P = MatrixXd(n_x,n_x);
+  /*
   P <<
   0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
   -0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
   0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
  -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
  -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
-
+*/
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
   
@@ -544,14 +551,19 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   //radar measurement noise standard deviation radius change in m/s
   double std_radrd = 0.1;
 
+ 
   //create example matrix with predicted sigma points
   MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+  //not needed this initialisation below?
+  /*
   Xsig_pred <<    
     5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
                 1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
           2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
          0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
           0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
+
+*/
 
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
@@ -681,3 +693,5 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   
   
 }
+
+//note to self x_sig _oredict declared 3 times in three differnt scopes and that is a big problem rewriting the default data over and over fix tomorrow
