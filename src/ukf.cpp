@@ -20,9 +20,15 @@ UKF::UKF() {
 
   // initial state vector
   x_ = VectorXd(5);
+  x_ << 0,0,0,0,0; // added 4 dec I thin itialising in funcitons below is causing reeated intis
 
   // initial covariance matrix
   P_ = MatrixXd(5, 5);
+  P_ << 1, 0, 0, 0, 0,// added 4 dec I thin itialising in funcitons below is causing reeated intis
+		  0, 1, 0, 0, 0,
+		  0, 0, 1, 0, 0,
+		  0, 0, 0, 1, 0,
+    	  0, 0, 0, 0, 1;
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
   std_a_ = 30;//Q+A says change this
@@ -96,11 +102,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       
     }
     // initial covariance matrix
-    P_ << 1, 0, 0, 0, 0,//might change this I am manually putting in identity matirx for now
-		  0, 1, 0, 0, 0,
-		  0, 0, 1, 0, 0,
-		  0, 0, 0, 1, 0,
-    	  0, 0, 0, 0, 1;
+  //  P_ << 1, 0, 0, 0, 0,//might change this I am manually putting in identity matirx for now
+//		  0, 1, 0, 0, 0,
+//		  0, 0, 1, 0, 0,
+//		  0, 0, 0, 1, 0,
+//    	  0, 0, 0, 0, 1;
     
     previous_timestamp_ = meas_package.timestamp_;
 
