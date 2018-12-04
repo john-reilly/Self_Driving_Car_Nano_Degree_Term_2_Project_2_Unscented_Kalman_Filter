@@ -104,6 +104,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     
     previous_timestamp_ = meas_package.timestamp_;
 
+    cout << "Initialising complete" << endl ;
     // done initializing
     is_initialized_ = true;
   
@@ -131,6 +132,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  * measurement and this one.
  */
 void UKF::Prediction(double delta_t) {
+  cout << "Beginning Prediciton" << endl ;
   /**
   TODO:
 
@@ -295,7 +297,7 @@ void UKF::Prediction(double delta_t) {
  * Student part end  //Lesson: 7 Section: 24 Assignment: 2
  ******************************************************************************/
   
-  
+  cout << "End Prediciton" << endl ;
   
   
   
@@ -308,6 +310,7 @@ void UKF::Prediction(double delta_t) {
  * @param {MeasurementPackage} meas_package
  */
 void UKF::UpdateLidar(MeasurementPackage meas_package) {
+  cout << "Beginning Update Lidar" << endl ;
   /**
   TODO:
 
@@ -352,12 +355,13 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   // filling Xsig_pred also seems suspect.....
   //create example matrix with predicted sigma points
   MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
-  Xsig_pred <<    
-    5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
-                1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
-          2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
-         0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
-          0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
+  //commenting out 4 dec
+  //Xsig_pred <<    
+//    5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
+//                1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
+//          2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
+//         0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
+//          0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
   // I think this is OK to stay same...
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
@@ -501,7 +505,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   
   
   
-  
+ cout << "End Update Lidar" << endl ; 
   
 }
 
@@ -510,6 +514,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
  * @param {MeasurementPackage} meas_package
  */
 void UKF::UpdateRadar(MeasurementPackage meas_package) {
+  cout << "Beginning Update Radar" << endl ;
   /**
   TODO:
 
@@ -627,28 +632,30 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   
   //create example vector for predicted state mean
   VectorXd x = VectorXd(n_x);
-  x <<
-     5.93637,
-     1.49035,
-     2.20528,
-    0.536853,
-    0.353577; //not needed ??
+//commenting out 4 dec
+  //x <<
+//     5.93637,
+//     1.49035,
+//     2.20528,
+//    0.536853,
+//    0.353577; //not needed ??
   
     //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
-  z <<
-      5.9214,
-      0.2187,
-      2.0062; //not needed ?? //PRIME SUSPECT am I overwritng each time?? I think the quiz was for one case and that is the problem??
+//  z <<
+//      5.9214,
+//      0.2187,
+//      2.0062; //not needed ?? //PRIME SUSPECT am I overwritng each time?? I think the quiz was for one case and that is the problem??
   
     //create example matrix for predicted state covariance
   MatrixXd P = MatrixXd(n_x,n_x);
-  P <<
-  0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
-  -0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
-  0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
- -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
- -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
+ //commenting out 4 dec
+  //P <<
+  //0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
+  //-0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
+  //0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
+ //-0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
+ //-0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
 
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
@@ -690,8 +697,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   x_ = x_ + K * z_diff;//was x = x + K * z_diff; // NEED to USE X_ and P_ here??
   P_ = P_ - K*S*K.transpose();//was P = P - K*S*K.transpose();
   
-  
+  cout << "End Update Radar" << endl ;
   
 }
 
 //note to self x_sig _oredict declared 3 times in three differnt scopes and that is a big problem rewriting the default data over and over fix tomorrow
+
+//note to self 4 dec forgot to remove initalisaiton in radar 
