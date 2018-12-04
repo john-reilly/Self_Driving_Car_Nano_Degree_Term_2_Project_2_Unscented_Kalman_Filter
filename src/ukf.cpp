@@ -52,7 +52,7 @@ UKF::UKF() {
   // Radar measurement noise standard deviation radius change in m/s
   std_radrd_ = 0.3;
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
-  
+  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);//moved this from line 209 363 and 567 yes had it 3 times!
   /**
   TODO:
 
@@ -206,7 +206,7 @@ void UKF::Prediction(double delta_t) {
   int n_x = 5; // from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
   
   //create matrix with predicted sigma points as columns
-  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);// from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
+//  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);// from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
   
   //predict sigma points
   for (int i = 0; i< 2*n_aug+1; i++)
@@ -360,7 +360,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   double std_radrd = 0.1;
   // filling Xsig_pred also seems suspect.....
   //create example matrix with predicted sigma points
-  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+  //MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   //commenting out 4 dec
   //Xsig_pred <<    
 //    5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
@@ -564,7 +564,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
  
   //create example matrix with predicted sigma points
-  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
+ // MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   //not needed this initialisation below?
   /*
   Xsig_pred <<    
