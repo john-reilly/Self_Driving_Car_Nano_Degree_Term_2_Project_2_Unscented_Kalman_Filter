@@ -53,14 +53,16 @@ UKF::UKF() {
   std_radrd_ = 0.3;
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
   //from header variables file adding here as indicated by header ukf.h
-   ///* Weights of sigma points
-  weights_ = VectorXd(2*n_aug_+1); //  VectorXd weights = VectorXd(2*n_aug+1); //Lesson: 7 Section: 24 Assignment: 2 
+  
 
   ///* State dimension
  n_x_ = 5 ; // 5 as from  Lesson: 7 Section:21 Assignment 2 before student part
 
   ///* Augmented state dimension
  n_aug_ = 7 ; //  7  from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  
+   ///* Weights of sigma points
+  weights_ = VectorXd(2*n_aug_+1); //  VectorXd weights = VectorXd(2*n_aug+1); //Lesson: 7 Section: 24 Assignment: 2 
 
   ///* Sigma point spreading parameter
  lambda_ = 3 - n_aug_ ; //3 - n_aug; //also from Lesson 7 Section 18 Assignment 2 but from before student part begins
