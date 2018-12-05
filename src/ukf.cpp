@@ -70,7 +70,7 @@ UKF::UKF() {
   //delta time
 // delta_t; //maybe not needed to init here??
   
-  MatrixXd Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);//moved this from line 209 363 and 567 yes had it 3 times!
+  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);//MatrixXd Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);//moved this from line 209 363 and 567 yes had it 3 times!
   /**
   TODO:
 
