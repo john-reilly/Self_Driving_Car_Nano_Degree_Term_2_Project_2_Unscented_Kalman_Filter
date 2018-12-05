@@ -177,10 +177,10 @@ void UKF::Prediction(double delta_t) {
   MatrixXd P_aug = MatrixXd(7, 7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
   //Process noise standard deviation longitudinal acceleration in m/s^2
-  double std_a = 0.2; //also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  //double std_a = 0.2; //also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
   //Process noise standard deviation yaw acceleration in rad/s^2
-  double std_yawdd = 0.2;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+ // double std_yawdd = 0.2;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   //set augmented dimension
   //int n_aug = 7;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
@@ -190,6 +190,7 @@ void UKF::Prediction(double delta_t) {
   //now in constructo
   //double lambda = 3 - n_aug; //also from Lesson 7 Section 18 Assignment 2 but from before student part begins
   
+  cout << "Line 193" << endl ;
   
   //create augmented mean state
   x_aug.head(5) = x_; //this was x not x_in quiz
@@ -199,11 +200,12 @@ void UKF::Prediction(double delta_t) {
   //create augmented covariance matrix
   P_aug.fill(0.0);
   P_aug.topLeftCorner(5,5) = P_; //was P not P_ in quiz
-  P_aug(5,5) = std_a*std_a;
-  P_aug(6,6) = std_yawdd*std_yawdd;
+  P_aug(5,5) = std_a_*std_a_;
+  P_aug(6,6) = std_yawdd_*std_yawdd_;
 
   //create square root matrix
   MatrixXd L = P_aug.llt().matrixL();
+  cout << "Line 208" << endl ;
 
   //create augmented sigma points
   Xsig_aug.col(0)  = x_aug;
@@ -227,7 +229,7 @@ void UKF::Prediction(double delta_t) {
   
   //create matrix with predicted sigma points as columns
 //  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);// from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
-  
+  cout << "Line 222" << endl ;
   //predict sigma points
   for (int i = 0; i< 2*n_aug_+1; i++)
   {
@@ -252,27 +254,30 @@ void UKF::Prediction(double delta_t) {
         px_p = p_x + v*delta_t*cos(yaw);
         py_p = p_y + v*delta_t*sin(yaw);
     }
-
+    cout << "Line 257" << endl ;
     double v_p = v;
     double yaw_p = yaw + yawd*delta_t;
     double yawd_p = yawd;
-
+cout << "Line 261" << endl ;
     //add noise
     px_p = px_p + 0.5*nu_a*delta_t*delta_t * cos(yaw);
     py_p = py_p + 0.5*nu_a*delta_t*delta_t * sin(yaw);
     v_p = v_p + nu_a*delta_t;
-
+cout << "Line 266" << endl ;
     yaw_p = yaw_p + 0.5*nu_yawdd*delta_t*delta_t;
     yawd_p = yawd_p + nu_yawdd*delta_t;
-
+cout << "Line 269" << endl ;
+cout << "Line 270 px_p: " << px_p << endl ;
+cout << "Line 271 i : " << i << endl ;
     //write predicted sigma point into right column
     Xsig_pred_(0,i) = px_p;
+cout << "Line 272" << endl ;
     Xsig_pred_(1,i) = py_p;
     Xsig_pred_(2,i) = v_p;
     Xsig_pred_(3,i) = yaw_p;
     Xsig_pred_(4,i) = yawd_p;
   }
-
+cout << "Line 277" << endl ;
 /*******************************************************************************
  * Student part end //Lesson: 7 Section:21 Assignment 2
  ******************************************************************************/
@@ -292,7 +297,7 @@ void UKF::Prediction(double delta_t) {
   //create covariance matrix for prediction
   //now in constructor
   //MatrixXd P = MatrixXd(n_x, n_x);//Lesson: 7 Section: 24 Assignment: 2 before student part
-  
+cout << "Line 297" << endl ;  
   // set weights
   double weight_0 = lambda_/(lambda_+n_aug_);
   weights(0) = weight_0;
@@ -319,7 +324,7 @@ void UKF::Prediction(double delta_t) {
 
     P_ = P_ + weights_(i) * x_diff * x_diff.transpose() ;
   }
-
+cout << "Line 324" << endl ;  
 
 /*******************************************************************************
  * Student part end  //Lesson: 7 Section: 24 Assignment: 2
