@@ -668,7 +668,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   //UPDATE RADAR
   
   //create example vector for predicted state mean
-  VectorXd x = VectorXd(n_x);
+//  VectorXd x = VectorXd(n_x); //commented out 6 dec using x_ instead
 //commenting out 4 dec
   //x <<
 //     5.93637,
@@ -713,7 +713,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
     // state difference
-    VectorXd x_diff = Xsig_pred_.col(i) - x;
+    VectorXd x_diff = Xsig_pred_.col(i) - x_; // was x 6 dec
     //angle normalization
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
