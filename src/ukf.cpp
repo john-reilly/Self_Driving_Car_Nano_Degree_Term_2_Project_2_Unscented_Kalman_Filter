@@ -288,7 +288,8 @@ cout << "Line 277" << endl ;
  * Student part begin  //Lesson: 7 Section: 24 Assignment: 2
  ******************************************************************************/
   //create vector for weights
-  VectorXd weights = VectorXd(2*n_aug_+1); //Lesson: 7 Section: 24 Assignment: 2 before student part
+  //commented out 6 dec using weights_ from constructor
+  //VectorXd weights = VectorXd(2*n_aug_+1); //Lesson: 7 Section: 24 Assignment: 2 before student part
   
   //create vector for predicted state
   //now in constructor
@@ -300,16 +301,16 @@ cout << "Line 277" << endl ;
 cout << "Line 297" << endl ;  
   // set weights
   double weight_0 = lambda_/(lambda_+n_aug_);
-  weights(0) = weight_0;
+  weights_(0) = weight_0;
   for (int i=1; i<2*n_aug_+1; i++) {  //2n+1 weights
     double weight = 0.5/(n_aug_+lambda_);
-    weights(i) = weight;
+    weights_(i) = weight;
   }
 
   //predicted state mean
   x_.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-    x_ = x_+ weights(i) * Xsig_pred_.col(i);
+    x_ = x_+ weights_(i) * Xsig_pred_.col(i);
   }
 
   //predicted state covariance matrix
@@ -371,12 +372,12 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   //double lambda = 3 - n_aug;//same as radar?
 
   //set vector for weights //same as radar?
-  VectorXd weights = VectorXd(2*n_aug_+1);
+  //VectorXd weights = VectorXd(2*n_aug_+1); //using weights_ from constructor
    double weight_0 = lambda_/(lambda_+n_aug_);
-  weights(0) = weight_0;
+  weights_(0) = weight_0;
   for (int i=1; i<2*n_aug_+1; i++) {  
     double weight = 0.5/(n_aug_+lambda_);
-    weights(i) = weight;
+    weights_(i) = weight;
   }
 
   // I note the next 3 variables had std_laser evivalents at top of file....
@@ -428,7 +429,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   VectorXd z_pred = VectorXd(n_z);
   z_pred.fill(0.0);
   for (int i=0; i < 2*n_aug_+1; i++) {
-      z_pred = z_pred + weights(i) * Zsig.col(i);
+      z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
 
   //innovation covariance matrix S
@@ -442,7 +443,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;// just normalise once somewhere else in a function....
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
-    S = S + weights(i) * z_diff * z_diff.transpose();
+    S = S + weights_(i) * z_diff * z_diff.transpose();
   }
   //change radar to laser here
   //add measurement noise covariance matrix
@@ -522,7 +523,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
 
-    Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+    Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
 
   //Kalman gain K;
@@ -576,12 +577,12 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   double lambda = 3 - n_aug;
 
   //set vector for weights
-  VectorXd weights = VectorXd(2*n_aug+1);
-   double weight_0 = lambda/(lambda+n_aug);
-  weights(0) = weight_0;
+  //VectorXd weights = VectorXd(2*n_aug+1);//commented out 6 dec using weights_ from contructor instead
+  double weight_0 = lambda/(lambda+n_aug);
+  weights_(0) = weight_0;
   for (int i=1; i<2*n_aug+1; i++) {  
     double weight = 0.5/(n_aug+lambda);
-    weights(i) = weight;
+    weights_(i) = weight;
   }
 
   //radar measurement noise standard deviation radius in m
@@ -636,7 +637,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   VectorXd z_pred = VectorXd(n_z);
   z_pred.fill(0.0);
   for (int i=0; i < 2*n_aug+1; i++) {
-      z_pred = z_pred + weights(i) * Zsig.col(i);
+      z_pred = z_pred + weights_(i) * Zsig.col(i);
   }
 
   //innovation covariance matrix S
@@ -650,7 +651,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;// just normalise once somewhere else in a function....
     while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
-    S = S + weights(i) * z_diff * z_diff.transpose();
+    S = S + weights_(i) * z_diff * z_diff.transpose();
   }
 
   //add measurement noise covariance matrix
@@ -718,7 +719,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
 
-    Tc = Tc + weights(i) * x_diff * z_diff.transpose();
+    Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
 
   //Kalman gain K;
