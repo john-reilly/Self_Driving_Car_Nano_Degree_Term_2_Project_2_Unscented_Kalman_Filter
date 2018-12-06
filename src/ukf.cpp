@@ -481,6 +481,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     //create example vector for incoming radar measurement
     */
   VectorXd z = VectorXd(n_z);
+  z = meas_package.raw_measurements_; //added 6 dec I think I was just overlaying same data repeatly same as update radar
   /*
   z <<
       5.9214,
@@ -678,6 +679,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   
     //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
+  z = meas_package.raw_measurements_; //added 6 dec I think I was just overlaying same data repeatly
 //  z <<
 //      5.9214,
 //      0.2187,
