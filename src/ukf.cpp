@@ -306,22 +306,25 @@ cout << "Line 297" << endl ;
     double weight = 0.5/(n_aug_+lambda_);
     weights_(i) = weight;
   }
+  cout << "Line 309" << endl ;  
 
   //predicted state mean
   x_.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
     x_ = x_+ weights_(i) * Xsig_pred_.col(i);
   }
+  cout << "Line 316" << endl ;  
 
   //predicted state covariance matrix
   P_.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-
+cout << "Line 321" << endl ;  
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
     //angle normalization
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    cout << "Line 327" << endl ;  
 
     P_ = P_ + weights_(i) * x_diff * x_diff.transpose() ;
   }
