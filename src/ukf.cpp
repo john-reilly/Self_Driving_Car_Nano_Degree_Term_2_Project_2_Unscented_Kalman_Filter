@@ -686,7 +686,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 //      2.0062; //not needed ?? //PRIME SUSPECT am I overwritng each time?? I think the quiz was for one case and that is the problem??
   
     //create example matrix for predicted state covariance
-  MatrixXd P = MatrixXd(n_x,n_x);
+  //MatrixXd P = MatrixXd(n_x,n_x);
  //commenting out 4 dec
   //P <<
   //0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
