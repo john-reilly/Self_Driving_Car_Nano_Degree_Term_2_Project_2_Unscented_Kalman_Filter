@@ -139,10 +139,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Prediction(delta_t);
 
   if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-    UpdateLidar(meas_package);
+    //UpdateLidar(meas_package);
   }
   else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-    //UpdateRadar(meas_package);//comment out to see how laser only works
+    UpdateRadar(meas_package);//comment out to see how laser only works
   }
   previous_timestamp_ = meas_package.timestamp_;
   
@@ -323,7 +323,8 @@ cout << "Line 321" << endl ;
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
       cout << "Line 324" << endl ;
     //angle normalization
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+    cout << x_diff(3)  << endl ;
+    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;//maybe print out x_diff(3)
       cout << "Line 327" << endl ;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
     cout << "Line 329" << endl ;  
@@ -591,13 +592,13 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   }
 
   //radar measurement noise standard deviation radius in m
-  double std_radr = 0.3;
+  //double std_radr = 0.3; //commented out 7 dec missed this when adjusting variables
 
   //radar measurement noise standard deviation angle in rad
-  double std_radphi = 0.0175;
+  //double std_radphi = 0.0175; //as above std_radr
 
   //radar measurement noise standard deviation radius change in m/s
-  double std_radrd = 0.1;
+  //double std_radrd = 0.1; //as above std_radr
 
  
   //create example matrix with predicted sigma points
@@ -661,9 +662,9 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
-  R <<    std_radr*std_radr, 0, 0,
-          0, std_radphi*std_radphi, 0,
-          0, 0,std_radrd*std_radrd;
+  R <<    std_radr_*std_radr_, 0, 0,
+          0, std_radphi_*std_radphi_, 0,
+          0, 0,std_radrd_*std_radrd_;
   S = S + R;
 
   
