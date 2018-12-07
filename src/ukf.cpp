@@ -142,7 +142,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     UpdateLidar(meas_package);
   }
   else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-    UpdateRadar(meas_package);
+    //UpdateRadar(meas_package);//comment out to see how laser only works
   }
   previous_timestamp_ = meas_package.timestamp_;
   
@@ -321,10 +321,12 @@ cout << "Line 297" << endl ;
 cout << "Line 321" << endl ;  
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
+      cout << "Line 324" << endl ;
     //angle normalization
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+      cout << "Line 327" << endl ;
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout << "Line 327" << endl ;  
+    cout << "Line 329" << endl ;  
 
     P_ = P_ + weights_(i) * x_diff * x_diff.transpose() ;
   }
