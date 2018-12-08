@@ -20,21 +20,21 @@ UKF::UKF() {
 
   // initial state vector
   x_ = VectorXd(5);
-  x_ << 0,0,0,0,0; // added 4 dec I thin itialising in funcitons below is causing reeated intis
-
+  x_ << 0,0,0,0,0; 
+  
   // initial covariance matrix
   P_ = MatrixXd(5, 5);
-  P_ << 1, 0, 0, 0, 0,// added 4 dec I thin itialising in funcitons below is causing reeated intis
+  P_ << 1, 0, 0, 0, 0,
 		  0, 1, 0, 0, 0,
 		  0, 0, 1, 0, 0,
 		  0, 0, 0, 1, 0,
     	  0, 0, 0, 0, 1;
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 2 ; //0.2 ;//0.15;//was 30  try 3 0.3//Q+A says change this
+  std_a_ = 2 ; //I tired 0.2, 2.0, 0.15, 0.3, 3 and 30
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 2; //0.2 ;// 0.15;//was 30 try 3 and 0.3 //Q+A says change this
+  std_yawdd_ = 2; //I tired 0.2, 2.0, 0.15, 0.3, 3 and 30
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -52,9 +52,7 @@ UKF::UKF() {
   // Radar measurement noise standard deviation radius change in m/s
   std_radrd_ = 0.3;
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
-  //from header variables file adding here as indicated by header ukf.h
-  
-
+ 
   ///* State dimension
  n_x_ = 5 ; // 5 as from  Lesson: 7 Section:21 Assignment 2 before student part
 
@@ -73,17 +71,8 @@ UKF::UKF() {
     double weight = 0.5/(n_aug_+lambda_);
     weights_(i) = weight;
   }
-  //delta time
-// delta_t; //maybe not needed to init here??
   
-  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);//MatrixXd Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);//moved this from line 209 363 and 567 yes had it 3 times!
-  /**
-  TODO:
-
-  Complete the initialization. See ukf.h for other member properties.
-
-  Hint: one or more values initialized above might be wildly off...
-  */
+  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
   
   previous_timestamp_ = 0;
 }
@@ -95,14 +84,7 @@ UKF::~UKF() {}
  * either radar or laser.
  */
 void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
-  /**
-  TODO:
 
-  Complete this function! Make sure you switch between lidar and radar
-  measurements.
-  */
-  
-  //as suggested by Q+A video use EKF initialisation
   /*****************************************************************************
    *  Initialization
    ****************************************************************************/
@@ -125,12 +107,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       x_(1) = meas_package.raw_measurements_(1) ;
       
     }
-    // initial covariance matrix
-  //  P_ << 1, 0, 0, 0, 0,//might change this I am manually putting in identity matirx for now
-//		  0, 1, 0, 0, 0,
-//		  0, 0, 1, 0, 0,
-//		  0, 0, 0, 1, 0,
-//    	  0, 0, 0, 0, 1;
     
     previous_timestamp_ = meas_package.timestamp_;
 
@@ -148,7 +124,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     UpdateLidar(meas_package);
   }
   else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
-    UpdateRadar(meas_package);//comment out to see how laser only works
+    UpdateRadar(meas_package);//commented out to see how laser only works
   }
   previous_timestamp_ = meas_package.timestamp_;
   
@@ -163,38 +139,17 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  */
 void UKF::Prediction(double delta_t) {
   cout << "Beginning Prediciton" << endl ;
-  /**
-  TODO:
 
-  Complete this function! Estimate the object's location. Modify the state
-  vector, x_. Predict sigma points, the state, and the state covariance matrix.
-  */
-  
-  //Create Augmented Sigma Points as per Q+A video
   //Lesson 7 Section 18 Assignment 2
   
-  /*******************************************************************************
- * Student part begin, Lesson 7 Section 18 Assignment 2
- ******************************************************************************/
   //create augmented mean vector 
   VectorXd x_aug = VectorXd(7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
   
   //create augmented state covariance
-  MatrixXd P_aug = MatrixXd(7, 7);//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
-  
-  //Process noise standard deviation longitudinal acceleration in m/s^2
-  //double std_a = 0.2; //also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
-  
-  //Process noise standard deviation yaw acceleration in rad/s^2
- // double std_yawdd = 0.2;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
-  //set augmented dimension
-  //int n_aug = 7;//also from Lesson 7 Section 18 Assignment 2 but from beofre student part begins
+  MatrixXd P_aug = MatrixXd(7, 7);//also from Lesson 7 Section 18 Assignment 2 but from before student part begins
   
   //create sigma point matrix
-  MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);//also from Lesson 7 Section 18 Assignment 2 but from before student part begins
-  //define spreading parameter
-  //now in constructo
-  //double lambda = 3 - n_aug; //also from Lesson 7 Section 18 Assignment 2 but from before student part begins
+  MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);//also from Lesson 7 Section 18 Assignment 2
   
   cout << "Line 193" << endl ;
   
@@ -221,20 +176,7 @@ void UKF::Prediction(double delta_t) {
     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_+n_aug_) * L.col(i);
   }
   
-/*******************************************************************************
- * Student part end, Lesson 7 Section 18 Assignment 2
- ******************************************************************************/
-  
-  //as per Q+A Lesson: 7 Section:21 Assignment 2
-  /*******************************************************************************
- * Student part begin //Lesson: 7 Section:21 Assignment 2
- ******************************************************************************/
-  //set state dimension
-  //now in constructor
-  //int n_x = 5; // from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
-  
-  //create matrix with predicted sigma points as columns
-//  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);// from Student part begin //Lesson: 7 Section:21 Assignment 2 before student part
+
   cout << "Line 222" << endl ;
   //predict sigma points
   for (int i = 0; i< 2*n_aug_+1; i++)
@@ -260,51 +202,31 @@ void UKF::Prediction(double delta_t) {
         px_p = p_x + v*delta_t*cos(yaw);
         py_p = p_y + v*delta_t*sin(yaw);
     }
-    cout << "Line 257" << endl ;
+  //  cout << "Line 257" << endl ;
     double v_p = v;
     double yaw_p = yaw + yawd*delta_t;
     double yawd_p = yawd;
-cout << "Line 261" << endl ;
+//cout << "Line 261" << endl ;
     //add noise
     px_p = px_p + 0.5*nu_a*delta_t*delta_t * cos(yaw);
     py_p = py_p + 0.5*nu_a*delta_t*delta_t * sin(yaw);
     v_p = v_p + nu_a*delta_t;
-cout << "Line 266" << endl ;
+//cout << "Line 266" << endl ;
     yaw_p = yaw_p + 0.5*nu_yawdd*delta_t*delta_t;
     yawd_p = yawd_p + nu_yawdd*delta_t;
-cout << "Line 269" << endl ;
-cout << "Line 270 px_p: " << px_p << endl ;
-cout << "Line 271 i : " << i << endl ;
+//cout << "Line 269" << endl ;
+//cout << "Line 270 px_p: " << px_p << endl ;
+//cout << "Line 271 i : " << i << endl ; // had som eprobelms here used cout to help
     //write predicted sigma point into right column
     Xsig_pred_(0,i) = px_p;
-cout << "Line 272" << endl ;
+//cout << "Line 272" << endl ;
     Xsig_pred_(1,i) = py_p;
     Xsig_pred_(2,i) = v_p;
     Xsig_pred_(3,i) = yaw_p;
     Xsig_pred_(4,i) = yawd_p;
   }
-cout << "Line 277" << endl ;
-/*******************************************************************************
- * Student part end //Lesson: 7 Section:21 Assignment 2
- ******************************************************************************/
-  //as Per Q+A predict mean and covariance
-  //Lesson: 7 Section: 24 Assignment: 2
-  
-  /*******************************************************************************
- * Student part begin  //Lesson: 7 Section: 24 Assignment: 2
- ******************************************************************************/
-  //create vector for weights
-  //commented out 6 dec using weights_ from constructor
-  //VectorXd weights = VectorXd(2*n_aug_+1); //Lesson: 7 Section: 24 Assignment: 2 before student part
-  
-  //create vector for predicted state
-  //now in constructor
-  //VectorXd x = VectorXd(n_x);//Lesson: 7 Section: 24 Assignment: 2 before student part
-  
-  //create covariance matrix for prediction
-  //now in constructor
-  //MatrixXd P = MatrixXd(n_x, n_x);//Lesson: 7 Section: 24 Assignment: 2 before student part
-cout << "Line 297" << endl ;  
+//cout << "Line 277" << endl ;
+//cout << "Line 297" << endl ;  
   // set weights
   double weight_0 = lambda_/(lambda_+n_aug_);
   weights_(0) = weight_0;
@@ -312,7 +234,7 @@ cout << "Line 297" << endl ;
     double weight = 0.5/(n_aug_+lambda_);
     weights_(i) = weight;
   }
-  cout << "Line 309" << endl ;  
+//  cout << "Line 309" << endl ;  
 
   //predicted state mean
   x_.fill(0.0);
@@ -324,24 +246,22 @@ cout << "Line 297" << endl ;
   //predicted state covariance matrix
   P_.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
-cout << "Line 321" << endl ;  
+//cout << "Line 321" << endl ;  
     // state difference
     VectorXd x_diff = Xsig_pred_.col(i) - x_;
-      cout << "Line 324" << endl ;
+  //    cout << "Line 324" << endl ;
     //angle normalization
     cout << x_diff(3)  << endl ;
     while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;//maybe print out x_diff(3)
-      cout << "Line 327" << endl ;
+//      cout << "Line 327" << endl ; //program was getting very stuck here with way off values lowing down everything for minutes at a time after a few iterations
     while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-    cout << "Line 329" << endl ;  
+//    cout << "Line 329" << endl ;  
 
     P_ = P_ + weights_(i) * x_diff * x_diff.transpose() ;
   }
-cout << "Line 324" << endl ;  
+//cout << "Line 324" << endl ;  
 
-/*******************************************************************************
- * Student part end  //Lesson: 7 Section: 24 Assignment: 2
- ******************************************************************************/
+
   
   cout << "End Prediciton" << endl ;
   
@@ -357,67 +277,13 @@ cout << "Line 324" << endl ;
  */
 void UKF::UpdateLidar(MeasurementPackage meas_package) {
   cout << "Beginning Update Lidar" << endl ;
-  /**
-  TODO:
 
-  Complete this function! Use lidar data to update the belief about the object's
-  position. Modify the state vector, x_, and covariance, P_.
-
-  You'll also need to calculate the lidar NIS.
-  */
-  // I am beginning by taking the update radar code and editing from there
-    // Below code from Lesson: 7 Video : 27 Assignment 2:
-  
-  //set state dimension
-  //now in constructor
- // int n_x = 5; //stays the same I think?
-
-  //set augmented dimension
-  //now in constructor
-  //int n_aug = 7;
 
   //changes for Lidar 2 as in x and y //set measurement dimension, radar can measure r, phi, and r_dot
   int n_z = 2;// was int n_z = 3;
 
-  //define spreading parameter
-  //now in constructor
-  //double lambda = 3 - n_aug;//same as radar?
-
-  //set vector for weights //same as radar?
-  //VectorXd weights = VectorXd(2*n_aug_+1); //using weights_ from constructor
- //  double weight_0 = lambda_/(lambda_+n_aug_);
-  //weights_(0) = weight_0;
-  //for (int i=1; i<2*n_aug_+1; i++) {  
-  //  double weight = 0.5/(n_aug_+lambda_);
-  //  weights_(i) = weight;
-  //}
-
-  // I note the next 3 variables had std_laser evivalents at top of file....
-  //radar measurement noise standard deviation radius in m
- // double std_radr = 0.3; //now in constructor
-
-  //radar measurement noise standard deviation angle in rad
-  //double std_radphi = 0.0175; //now in constructor
-
-  //radar measurement noise standard deviation radius change in m/s
-  //double std_radrd = 0.1; //now in constructor
-  // filling Xsig_pred also seems suspect.....
-  //create example matrix with predicted sigma points
-  //MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
-  //commenting out 4 dec
-  //Xsig_pred <<    
-//    5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
-//                1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
-//          2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
-//         0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
-//          0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
-  // I think this is OK to stay same...
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
-
-/*******************************************************************************
- * Student part begin
- ******************************************************************************/
 
   //transform sigma points into measurement space
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
@@ -460,58 +326,17 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   //change radar to laser here
   //add measurement noise covariance matrix
   MatrixXd R = MatrixXd(n_z,n_z);
-  //R <<    std_radr*std_radr, 0, 0,
-  //        0, std_radphi*std_radphi, 0,
-  //        0, 0,std_radrd*std_radrd;
   
   R <<    std_laspx_*std_laspx_, 0,
           0, std_laspy_*std_laspy_;
           
   S = S + R;
 
-  
-/*******************************************************************************
- * Student part end
- ******************************************************************************/
-  // This is Lesson 7 Video 30 Assignemnt 2 as per Q+A
- //now update lidar  //UPDATE RADAR
-  
-  //maybe don't need this for lidar
-  //tohers leave this out eniterly until next section
-  // NOTE x and p below are same as x_ and P_ above in class variables and should be used instead??
-  //create example vector for predicted state mean
-  // Don't need these initalisations ans x replaces x_ not needed and P replacing P_
-  
- // VectorXd x = VectorXd(n_x); //now in constructor
-  /*
-  x <<
-     5.93637,
-     1.49035,
-     2.20528,
-    0.536853,
-    0.353577; //not needed ??
-  //PRIME SUSPECT ...am I setting z each time below?? same in LIDAR??
     //create example vector for incoming radar measurement
-    */
+    
   VectorXd z = VectorXd(n_z);
   z = meas_package.raw_measurements_; //added 6 dec I think I was just overlaying same data repeatly same as update radar
-  /*
-  z <<
-      5.9214,
-      0.2187,
-      2.0062; //not needed ??
-      */
   
-    //create example matrix for predicted state covariance
-  //MatrixXd P = MatrixXd(n_x,n_x); //now in constructor
-  /*
-  P <<
-  0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
-  -0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
-  0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
- -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
- -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
-*/
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x_, n_z);
   
@@ -554,8 +379,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   
   
   
-  
- cout << "End Update Lidar" << endl ; 
+ //cout << "End Update Lidar" << endl ; 
   
 }
 
@@ -564,16 +388,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
  * @param {MeasurementPackage} meas_package
  */
 void UKF::UpdateRadar(MeasurementPackage meas_package) {
-  cout << "Beginning Update Radar" << endl ;
-  /**
-  TODO:
-
-  Complete this function! Use radar data to update the belief about the object's
-  position. Modify the state vector, x_, and covariance, P_.
-
-  You'll also need to calculate the radar NIS.
-  */
-  
+ // cout << "Beginning Update Radar" << endl ;
+ 
   // Below code from Lesson: 7 Video : 27 Assignment 2:
   
   //set state dimension
@@ -585,48 +401,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   //set measurement dimension, radar can measure r, phi, and r_dot
   int n_z = 3;
 
-  //define spreading parameter
-  //double lambda = 3 - n_aug;//using lambda_ in contuctor
-
-  //set vector for weights
-  //VectorXd weights = VectorXd(2*n_aug+1);//commented out 6 dec using weights_ from contructor instead
- //moving this to constructor taking form here and laser section
-  // double weight_0 = lambda/(lambda+n_aug);
- // weights_(0) = weight_0;
- // for (int i=1; i<2*n_aug+1; i++) {  
- //   double weight = 0.5/(n_aug+lambda);
- //   weights_(i) = weight;
- // }
-
-  //radar measurement noise standard deviation radius in m
-  //double std_radr = 0.3; //commented out 7 dec missed this when adjusting variables
-
-  //radar measurement noise standard deviation angle in rad
-  //double std_radphi = 0.0175; //as above std_radr
-
-  //radar measurement noise standard deviation radius change in m/s
-  //double std_radrd = 0.1; //as above std_radr
-
- 
-  //create example matrix with predicted sigma points
- // MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
-  //not needed this initialisation below?
-  /*
-  Xsig_pred <<    
-    5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
-                1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
-          2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
-         0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
-          0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
-
-*/
 
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
 
-/*******************************************************************************
- * Student part begin
- ******************************************************************************/
 
   //transform sigma points into measurement space
   for (int i = 0; i < 2 * n_aug + 1; i++) {  //2n+1 simga points
@@ -675,39 +453,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   S = S + R;
 
   
-/*******************************************************************************
- * Student part end
- ******************************************************************************/
-  // This is Lesson 7 Video 30 Assignemnt 2 as per Q+A
-  //UPDATE RADAR
-  
-  //create example vector for predicted state mean
-//  VectorXd x = VectorXd(n_x); //commented out 6 dec using x_ instead
-//commenting out 4 dec
-  //x <<
-//     5.93637,
-//     1.49035,
-//     2.20528,
-//    0.536853,
-//    0.353577; //not needed ??
-  
     //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
   z = meas_package.raw_measurements_; //added 6 dec I think I was just overlaying same data repeatly
-//  z <<
-//      5.9214,
-//      0.2187,
-//      2.0062; //not needed ?? //PRIME SUSPECT am I overwritng each time?? I think the quiz was for one case and that is the problem??
-  
-    //create example matrix for predicted state covariance
-  //MatrixXd P = MatrixXd(n_x,n_x);
- //commenting out 4 dec
-  //P <<
-  //0.0054342,  -0.002405,  0.0034157, -0.0034819, -0.00299378,
-  //-0.002405,    0.01084,   0.001492,  0.0098018,  0.00791091,
-  //0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
- //-0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
- //-0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972; // not needed?
+
 
   //create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x, n_z);
@@ -753,6 +502,4 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   
 }
 
-//note to self x_sig _oredict declared 3 times in three differnt scopes and that is a big problem rewriting the default data over and over fix tomorrow
 
-//note to self 4 dec forgot to remove initalisaiton in radar 
