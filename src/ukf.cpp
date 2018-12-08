@@ -31,10 +31,10 @@ UKF::UKF() {
     	  0, 0, 0, 0, 1;
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;//Q+A says change this
+  std_a_ = 3;//was 30  try 3 0.3//Q+A says change this
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;//Q+A says change this
+  std_yawdd_ = 3;//was 30 try 3 and 0.3 //Q+A says change this
   
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
@@ -66,7 +66,7 @@ UKF::UKF() {
 
   ///* Sigma point spreading parameter
  lambda_ = 3 - n_aug_ ; //3 - n_aug; //also from Lesson 7 Section 18 Assignment 2 but from before student part begins
-  
+  //moving this bit weights_made the biggest differnce so far nearly within rubic spec!
  double weight_0 = lambda_/(lambda_+n_aug_);
  weights_(0) = weight_0;
  for (int i=1; i<2*n_aug_+1; i++) {  
@@ -145,7 +145,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Prediction(delta_t);
 
   if (meas_package.sensor_type_ == MeasurementPackage::LASER){
-    //UpdateLidar(meas_package);
+    UpdateLidar(meas_package);
   }
   else if (meas_package.sensor_type_ == MeasurementPackage::RADAR){
     UpdateRadar(meas_package);//comment out to see how laser only works
