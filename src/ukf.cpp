@@ -422,8 +422,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     double v  = Xsig_pred_(2,i);
     double yaw = Xsig_pred_(3,i);
 
-    double v1 = cos(yaw)*v;// not sure for lidar //unused warning
-    double v2 = sin(yaw)*v;// not sure for lidar //unused warning
+   // double v1 = cos(yaw)*v;// not sure for lidar //unused warning//not used.. from exercise
+   // double v2 = sin(yaw)*v;// not sure for lidar //unused warning // not used.... from exercise
 
     //definately changes for lidar// measurement model 
     Zsig(0,i) = p_x ; // was Zsig(0,i) = sqrt(p_x*p_x + p_y*p_y);                        //r
