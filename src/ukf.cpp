@@ -67,6 +67,12 @@ UKF::UKF() {
   ///* Sigma point spreading parameter
  lambda_ = 3 - n_aug_ ; //3 - n_aug; //also from Lesson 7 Section 18 Assignment 2 but from before student part begins
   
+ double weight_0 = lambda_/(lambda_+n_aug_);
+ weights_(0) = weight_0;
+ for (int i=1; i<2*n_aug_+1; i++) {  
+    double weight = 0.5/(n_aug_+lambda_);
+    weights_(i) = weight;
+  }
   //delta time
 // delta_t; //maybe not needed to init here??
   
@@ -379,12 +385,12 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
   //set vector for weights //same as radar?
   //VectorXd weights = VectorXd(2*n_aug_+1); //using weights_ from constructor
-   double weight_0 = lambda_/(lambda_+n_aug_);
-  weights_(0) = weight_0;
-  for (int i=1; i<2*n_aug_+1; i++) {  
-    double weight = 0.5/(n_aug_+lambda_);
-    weights_(i) = weight;
-  }
+ //  double weight_0 = lambda_/(lambda_+n_aug_);
+  //weights_(0) = weight_0;
+  //for (int i=1; i<2*n_aug_+1; i++) {  
+  //  double weight = 0.5/(n_aug_+lambda_);
+  //  weights_(i) = weight;
+  //}
 
   // I note the next 3 variables had std_laser evivalents at top of file....
   //radar measurement noise standard deviation radius in m
@@ -580,16 +586,17 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   int n_z = 3;
 
   //define spreading parameter
-  double lambda = 3 - n_aug;
+  //double lambda = 3 - n_aug;//using lambda_ in contuctor
 
   //set vector for weights
   //VectorXd weights = VectorXd(2*n_aug+1);//commented out 6 dec using weights_ from contructor instead
-  double weight_0 = lambda/(lambda+n_aug);
-  weights_(0) = weight_0;
-  for (int i=1; i<2*n_aug+1; i++) {  
-    double weight = 0.5/(n_aug+lambda);
-    weights_(i) = weight;
-  }
+ //moving this to constructor taking form here and laser section
+  // double weight_0 = lambda/(lambda+n_aug);
+ // weights_(0) = weight_0;
+ // for (int i=1; i<2*n_aug+1; i++) {  
+ //   double weight = 0.5/(n_aug+lambda);
+ //   weights_(i) = weight;
+ // }
 
   //radar measurement noise standard deviation radius in m
   //double std_radr = 0.3; //commented out 7 dec missed this when adjusting variables
