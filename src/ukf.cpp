@@ -419,8 +419,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     // extract values for better readibility
     double p_x = Xsig_pred_(0,i);
     double p_y = Xsig_pred_(1,i);
-    double v  = Xsig_pred_(2,i);
-    double yaw = Xsig_pred_(3,i);
+   // double v  = Xsig_pred_(2,i); //not currently used ...from exercise
+   // double yaw = Xsig_pred_(3,i); //not currently used ...from exercise
 
    // double v1 = cos(yaw)*v;// not sure for lidar //unused warning//not used.. from exercise
    // double v2 = sin(yaw)*v;// not sure for lidar //unused warning // not used.... from exercise
